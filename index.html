@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare two makeup images on your own device, check the visible changes, and save your practice notes. Free, offline, and no upload required.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src blob: data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Makeup Comparison Workbench</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to comparison</a>
+  <header class="page-header">
+    <p class="brand">Makeup Comparison Workbench</p>
+    <h1>See the change.<br>Choose what to try.</h1>
+    <p class="intro">Compare two images, keep a fair view, and turn one visible detail into a practice plan.</p>
+    <p class="privacy-note">Your images stay on this device. No account, upload, or tracking.</p>
+  </header>
+
+  <main id="workspace">
+    <section class="image-setup" aria-labelledby="setup-heading">
+      <div class="section-heading">
+        <h2 id="setup-heading">Choose your images</h2>
+        <p>Use the same face, crop, pose, and lighting where possible. PNG, JPEG, or WebP, up to 20 MB each.</p>
+      </div>
+      <div class="image-inputs">
+        <div class="image-input">
+          <label class="field-label" for="before-file">Before image</label>
+          <input id="before-file" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="before-status">
+          <p id="before-status" class="file-status" role="status">No image chosen.</p>
+          <label for="before-label">Label for your notes</label>
+          <input id="before-label" type="text" value="Before" maxlength="80" autocomplete="off">
+        </div>
+        <div class="image-input">
+          <label class="field-label" for="after-file">After image</label>
+          <input id="after-file" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="after-status">
+          <p id="after-status" class="file-status" role="status">No image chosen.</p>
+          <label for="after-label">Label for your notes</label>
+          <input id="after-label" type="text" value="After" maxlength="80" autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <div class="work-grid">
+      <section class="comparison" aria-labelledby="comparison-heading">
+        <div class="comparison-heading">
+          <h2 id="comparison-heading">Compare the details</h2>
+          <button id="reset-view" type="button" class="quiet" disabled>Reset view</button>
+        </div>
+        <div class="image-labels" aria-hidden="true"><span id="before-caption">Before</span><span id="after-caption">After</span></div>
+        <div id="stage" class="stage">
+          <div id="empty-state" class="empty-state"><p>Two images.<br>One closer look.</p><span>Choose a before and an after image above.</span></div>
+          <img id="before-image" class="comparison-image" alt="Your before image" hidden>
+          <div id="after-layer" class="after-layer" hidden><img id="after-image" class="comparison-image" alt="Your after image"></div>
+          <div id="divider-line" class="divider-line" aria-hidden="true" hidden><span>↔</span></div>
+        </div>
+        <p id="dimension-warning" class="warning" hidden>These images have different proportions. They are fitted without stretching. Use the same crop for a fair comparison.</p>
+        <div class="view-controls">
+          <label class="range-label" for="divider">Comparison divider <output id="divider-value" for="divider">50% before</output></label>
+          <input id="divider" type="range" min="0" max="100" value="50" step="1" disabled aria-describedby="divider-help">
+          <p id="divider-help" class="help">Drag across the image, or focus this slider and use the arrow keys. Home shows after; End shows before.</p>
+          <div class="zoom-row">
+            <label for="zoom">Zoom both images</label>
+            <select id="zoom" disabled><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option></select>
+          </div>
+          <p class="help">Zoom is centered. Images are fitted, not automatically aligned or color-corrected.</p>
+        </div>
+      </section>
+
+      <section class="notes" aria-labelledby="notes-heading">
+        <h2 id="notes-heading">Make a small plan</h2>
+        <p class="notes-intro">Separate a makeup change from a change to the photo itself.</p>
+        <label for="question">What are you comparing?</label>
+        <input id="question" type="text" maxlength="240" placeholder="For example: a softer eyeliner wing">
+        <label for="fairness">Face, crop, and lighting</label>
+        <select id="fairness">
+          <option value="not-assessed">I have not checked yet</option>
+          <option value="comparable">Similar enough for this question</option>
+          <option value="uncertain">Uncertain; I need another comparison</option>
+          <option value="changed">Changed; I should not judge the makeup from this</option>
+        </select>
+        <label for="observations">What can you actually see?</label>
+        <textarea id="observations" rows="4" maxlength="4000" placeholder="Describe the lip, eye, or cheek change. Note any changed face shape, skin texture, shadows, or exposure."></textarea>
+        <label for="practice">One thing to try in real life</label>
+        <textarea id="practice" rows="3" maxlength="4000" placeholder="For example: try a shorter brown wing with the liner I already own."></textarea>
+        <button id="export-notes" type="button" class="primary">Export notes</button>
+        <p class="help">Saves a JSON file with your labels and notes. Images and original filenames are not included.</p>
+        <p id="export-status" class="file-status" role="status"></p>
+      </section>
+    </div>
+
+    <section class="use-notes" aria-labelledby="use-heading">
+      <h2 id="use-heading">Keep the comparison honest</h2>
+      <p>A generated preview can change facial features or lighting. A photograph cannot tell you how a formula feels, wears, or matches your skin in person. This is an educational styling tool, not a medical or diagnostic assessment.</p>
+      <p>For a simple method, read <a href="https://lookslate.com/guides/how-to-compare-ai-makeup-previews" target="_blank" rel="noopener noreferrer">how to compare AI makeup previews</a> from Lookslate, which maintains this tool.</p>
+    </section>
+  </main>
+  <footer>
+    <p>Nothing is saved automatically. Export your notes before closing or refreshing this page.</p>
+    <button id="clear-workspace" type="button" class="quiet">Clear workspace</button>
+  </footer>
+  <noscript><p class="noscript">Enable JavaScript to compare local images and export notes. No data is sent to a server.</p></noscript>
+</body>
+</html>
