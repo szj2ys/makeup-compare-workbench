@@ -25,6 +25,10 @@ Check face shape, crop, lighting, exposure and skin texture before comparing a m
 
 For a practical workflow, see [how to compare AI makeup previews](https://lookslate.com/guides/how-to-compare-ai-makeup-previews). Lookslate maintains this project; that reference is not an independent endorsement. The workbench can be used without visiting Lookslate.
 
+## Occasion rehearsal worksheet
+
+Use the [occasion rehearsal worksheet](docs/occasion-rehearsal.md) to turn two references into a practical event-day plan with products you already own. It maps to the existing comparison and practice fields; no image upload is needed.
+
 ## Files and hosting
 
 - `index.html`: accessible page and content security policy.
